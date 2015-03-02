@@ -1,2 +1,2 @@
 # LogAnalysis
-practise python
+practice python
