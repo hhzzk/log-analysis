@@ -1,0 +1,77 @@
+#!/bin/bash
+
+check_running() {
+    [ -f $1 ] && ps -p `cat $1` &> /dev/null
+    return $?
+}
+
+start() {
+    rc=0
+    start-stop-daemon -S -b -p '/var/run/minerDaemon.pid' -m -x '/bin/bash' -- 'FullDir/minerDaemon' &> /dev/null
+    sleep 1
+
+    if check_running /var/run/minerDaemon.pid; then
+        echo Start minerDaemon: Succeeded.
+    else
+        echo Start minerDaemon: Failed.
+        rc=1
+    fi
+
+    if check_running /var/run/miner.pid; then
+        echo Start miner: Succeeded.
+    else
+        # Sleep 3 seconds for recovering
+        sleep 3
+        check_running /var/run/miner.pid
+        if [ $? = 0 ]; then
+            echo Start miner: Succeeded.
+        else
+            echo Start miner: Failed.
+            rc=1
+        fi
+    fi
+    return $rc
+}
+
+stop() {
+    start-stop-daemon -K -p '/var/run/minerDaemon.pid' -s KILL &> /dev/null
+    # Now stop the spawned process as well
+    parent=$(cat '/var/run/miner.pid')
+    pkill -TERM -P ${parent}
+
+    sleep 1
+    rc=0
+    if check_running /var/run/minerDaemon.pid; then
+        echo Stop minerDaemon: Failed.
+        rc=1
+    else
+        echo Stop minerDaemon: Succeeded.
+    fi
+
+    if check_running /var/run/miner.pid; then
+        echo Stop miner: Failed.
+        rc=1
+    else
+        echo Stop miner: Succeeded.
+    fi
+    return $rc
+}
+
+case "$1" in
+start)
+    start
+;;
+stop)
+    stop
+;;
+restart)
+    stop
+    sleep 1
+    start
+;;
+*)
+    echo 'Usage: $0 {start|stop|restart}'
+    exit 1
+esac
+
+exit $?

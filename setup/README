@@ -1,0 +1,8 @@
+Before use this script you should install expect (sudo apt-get install expect)
+
+Install:
+    1.run ./install.sh hostname@ip:[path]
+        a)you must type colon(:) ,but "path" is not necessary
+    2.you will be asked to input remote password
+ 
+Files 'miner' and 'minerDaemon' are used to generate daemon

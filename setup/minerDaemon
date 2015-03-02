@@ -1,0 +1,10 @@
+#!/bin/bash
+
+. /etc/profile
+while true
+do
+    # Check if the job is running, otherwise start it
+    SERVER=`echo miner.py* | cut -d ' ' -f1`
+    start-stop-daemon -S -b -p "/var/run/miner.pid" -m -x "/usr/bin/python" -- "FullDir"/${SERVER}
+    sleep 10
+done

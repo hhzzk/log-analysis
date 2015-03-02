@@ -1,0 +1,67 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+    <meta http-equiv="Content-Language" content="zh-cn" />
+    <script type="text/javascript" src="static/jquery-2.1.1.min.js"></script>
+    <script type="text/javascript" src="static/log.date.js"></script>
+    <script type="text/javascript" src="static/log.class.js"></script>
+    <script type="text/javascript" src="static/log.click.js"></script>
+    <script type="text/javascript" src="static/jsonformat.js"></script>
+<title>日志查询</title>
+
+<style type="text/css">
+    input[type="text"] {width: 160px; height: 15px; }
+    #option, #context {width: 160px; height: 20px; }
+    #display {
+        position: absolute;
+        left   : 350px;
+        top    : 20px;
+        height : 800px;
+        width  : 1450px;
+    }
+</style>
+<link href="/static/log.style.css" type="text/css" rel="stylesheet">
+
+</head>
+
+<body>
+
+<big><big>日志查询</big></big><br>
+
+<br>
+<form>
+  开始时间：<input name="starttime" id="starttime" type="text" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')"/><br>
+  结束时间：<input name="endtime" id="endtime" type="text" onclick="SelectDate(this,'yyyy-MM-dd hh:mm:ss')"/><br>
+  开始版本：<input name="startver" id="startver" type = "text"><br>
+  结束版本：<input name="endver" id="endver" type = "text"><br>
+  查询选项：
+   <select name="option" id="option" onChange="setTown('option','context')">
+        <option value="">请选择</option>
+        <option value="host">主机</option>
+        <option value="app">设备</option>
+        <option value="dev">终端</option>
+        <option value="server">服务器</option>
+        <option value="ip">IP地址</option>
+    </select>
+    <br>
+  选项&nbsp;&nbsp;&nbsp;&nbsp;ID：<input name="optionid" id="optionid" type = "text"><br>
+  查询内容：
+ <select name="context" id="context">
+    <option value="">请选择</option>
+   </select>
+  <br>
+  <br>
+  <input id="search" type="button" value="查询" onclick='send()'></input>&nbsp;&nbsp;
+  <input id="refresh" type="button" value="刷新"></input><br>
+  <div style="font-size: 13px;">
+    <p>说明：</p>
+    <p>1. 当结束时间为空时，实时显示相应日志，每隔<br>
+         &nbsp;&nbsp;&nbsp;&nbsp;30s更新一次<br>
+       2. 点击刷新显示上次查询到现在的相应日志</p>
+  </div>
+</form>
+
+<div id="display"></div>
+
+</body></html>
